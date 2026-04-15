@@ -55,11 +55,13 @@ tailwind.config = {
   /* Project cards in list */
   .proj-card {
     cursor: pointer;
+    background: #ffffff;
+    border: 1px solid rgba(190,201,199,0.4);
     border-left: 3px solid transparent;
     transition: background 0.12s, border-color 0.12s;
   }
-  .proj-card:hover  { background: #ffffff; border-left-color: #bec9c7; }
-  .proj-card.active { background: #ffffff; border-left-color: #004f4e; box-shadow: 0 4px 16px -2px rgba(6,21,55,0.08); }
+  .proj-card:hover  { background: #ffffff; border-color: rgba(190,201,199,0.6); border-left-color: #bec9c7; }
+  .proj-card.active { background: #ffffff; border-color: rgba(0,79,78,0.2); border-left-color: #004f4e; box-shadow: 0 4px 16px -2px rgba(6,21,55,0.08); }
 
   /* Detail panel */
   #detail-panel { scrollbar-width: thin; scrollbar-color: #bec9c7 transparent; }
@@ -67,6 +69,13 @@ tailwind.config = {
   #detail-panel::-webkit-scrollbar-thumb { background: #bec9c7; border-radius: 4px; }
 
   mark { background: #a4f0ed; color: #004f4e; border-radius: 2px; padding: 0 2px; }
+
+  /* Pills: wrap en desktop, scroll horizontal en móvil */
+  #grupo-pills { flex-wrap: wrap; overflow-x: visible; }
+  @media (max-width: 639px) {
+    #grupo-pills { flex-wrap: nowrap; overflow-x: auto; -ms-overflow-style: none; scrollbar-width: none; }
+    #grupo-pills::-webkit-scrollbar { display: none; }
+  }
 
   /* ── Responsive: móvil vertical (< 640px) ── */
   @media (max-width: 639px) {
@@ -140,11 +149,11 @@ tailwind.config = {
       </select>
     </div>
     <!-- Pills de Grupo -->
-    <div id="grupo-pills" style="display:flex;flex-wrap:wrap;gap:4px;"></div>
+    <div id="grupo-pills" style="display:flex;gap:6px;padding-bottom:4px;"></div>
   </div>
 
   <!-- Project list (scrollable) -->
-  <nav id="project-list" style="flex:1;overflow-y:auto;padding:0 12px 12px;display:flex;flex-direction:column;gap:4px;"></nav>
+  <nav id="project-list" style="flex:1;overflow-y:auto;padding:0 12px 12px;display:flex;flex-direction:column;gap:7px;"></nav>
 
   <!-- Empty state -->
   <div id="empty-state" class="hidden" style="padding:32px 20px;text-align:center;">
@@ -245,11 +254,6 @@ tailwind.config = {
         </div>
       </div>
 
-      <!-- CTA -->
-      <a id="d-mailto" href="#" class="signature-cta" style="display:flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:18px;border-radius:14px;color:#ffffff;font-family:'Inter',sans-serif;font-weight:700;font-size:1rem;text-decoration:none;transition:opacity 0.15s;" onmouseover="this.style.opacity='0.88'" onmouseout="this.style.opacity='1'">
-        Contactar proyecto
-        <span class="material-symbols-outlined" style="font-size:1.1rem;color:#ffffff;">send</span>
-      </a>
 
     </div>
   </div>
@@ -315,7 +319,6 @@ function showProject(index) {
   document.getElementById('d-nombre').textContent  = ct.nombre;
   document.getElementById('d-email').textContent   = ct.email || '—';
   document.getElementById('d-email').href          = ct.email ? 'mailto:' + ct.email : '#';
-  document.getElementById('d-mailto').href         = ct.email ? 'mailto:' + ct.email : '#';
   document.getElementById('d-desc').textContent    = p['Descripcion empresa'];
 
   const objDiv = document.getElementById('d-objetivos');
@@ -404,7 +407,7 @@ function hl(s, q) {
   const grupos = ["M1-Acuicola", "M2-Salud animal y Expansión internacional", "M3-Salud Chile", "M4-Agro", "M5-Alimentos EEUU-Chile", "M6-Alimentos LATAM", "M7 Tics México", "M8  Tics Chile", "M9 Tics global", "M10-Minería", "M11-Minería LATAM", "M12-Manufactura, Construcción, Energía", "M13- BioTech, QcaTech, Nanotecnología"];
   const pillsEl = document.getElementById('grupo-pills');
   grupos.forEach(function(g) {
-    const short = g.match(/^M\d+/)[0];
+    const short = 'Mesa ' + g.match(/^M(\d+)/)[1];
     const pill = document.createElement('button');
     pill.title = g;
     pill.textContent = short;
@@ -441,7 +444,6 @@ function hl(s, q) {
   });
 
   renderList(PROJECTS.map((p, i) => Object.assign({}, p, {_i: i})));
-  if (PROJECTS.length > 0) showProject(0);
 })();
 
 </script>
